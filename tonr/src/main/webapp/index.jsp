@@ -21,7 +21,7 @@
   <div id="content">
     <h1>Welcome to Tonr.com!</h1>
     
-    <p>This is a website that will allow you to print your photos that you've uploaded to <a href="http://localhost:8080/sparklr/">sparklr.com</a>!
+    <p>This is a website that will allow you to print your photos that you've uploaded to <a href="http://localhost:8080/sparklr2/">sparklr.com</a>!
       And since this site uses <a href="http://oauth.net">OAuth</a> to access your photos, we will never ask you
       for your Sparklr credentials.</p>
 
@@ -33,6 +33,9 @@
     <authz:authorize ifAllGranted="ROLE_USER">
       <p><a href="<c:url value="/sparklr/photos"/>">View my Sparklr photos</a></p>
     </authz:authorize>
+    
+    <br/>
+    <p><a href="<c:url value="/logout.do"/>">Logout</a></p>
 
     <p class="footer">Courtesy <a href="http://www.openwebdesign.org">Open Web Design</a> Thanks to <a href="http://www.dubaiapartments.biz/">Dubai Hotels</a></p>
   </div>

@@ -1,0 +1,81 @@
+@startuml
+
+title Access to a Resource Server (Get photos)
+
+
+Actor ResourceOwner
+participant Browser
+participant "Tonr\n(Client)" as Tonr 
+participant "Sparklr\n(Resource Server)" as Sparklr
+participant "Keyhole\n(Authorization Server)" as Keyhole
+
+note over of Tonr #aqua
+Client should have the access token at this point. 
+Using Bearer header to access the reource server.
+end note
+ 
+note over of Sparklr #aqua
+- Sparklr is a resource server of Tonr.
+- Sparklr is a client of Keyhole (Authorization server).
+end note
+
+note over of Keyhole #aqua
+Keyhole is a resource server of Tonr and Sparklr 
+for userinfo service (/me)
+end note
+
+note over of ResourceOwner
+A Resource owner successfuly login to the Tonr
+(See login sequence diagram)
+end note
+ResourceOwner -> Browser : login
+Browser --> Browser : (see login sequence diagram)
+Browser --> ResourceOwner : /tonr/login.jsp
+
+ResourceOwner -> Browser: Hit the Pictures link.
+activate Browser
+    Browser -> Tonr : GET /tonr/sparkly/photos (JSESSIONID=999999)
+    
+    Tonr -> Tonr : authenticate (spring secuirty filter)\nTonr will check the security context in Http session is available.\nIf not, fallback to login flow.
+    
+    Tonr -> Tonr : look up the access token
+    
+    Tonr -> Tonr : set the token to Authorization header.\nAuthorization: Bearer xxx-xxx-xxx
+    
+    note over of Tonr : Start Client to Resource Server access
+ 
+    activate Tonr
+    
+    	Tonr -> Sparklr : GET /sparklr/photos (Autorization: Bearer xxx-xxx-xxx)) 
+    
+        activate Sparklr
+    	Sparklr -> Sparklr : Sparklr checks with Bearer header,\nverify if access token is valid.
+    
+    	Sparklr -> Keyhole : GET /me (Authorization: Bearer xxx-xxx-xxx)\n(Sparklr needs to get authentication (user info)\nof this access token as this is the first\ntime access used by this token.)
+  
+    	Keyhole -> Sparklr : Here is your info.
+    	
+    	Sparklr -> Sparklr : saves the access token and user to the token store.
+        
+    	Sparklr -> Tonr : Here is a list!
+  
+        deactivate Sparklr
+    
+    	Tonr -> Browser : return a HTML page.
+    
+    deactivate Tonr
+    
+    loop for all my photos
+    Browser -> Tonr : GET /tonr/photos/N (JSESSIONID=99999)
+ 	Tonr -> Sparklr : GET /sparkly/photos/N (Autorization: Bearer xxx-xxx-xxx)\nTonr will send the access token w/\n Authorization : Bearer header.
+    activate Sparklr
+    Sparklr -> Sparklr : authenticate\n(Sparklr should have this token in the store,\nthen won't go Keyhole again.)
+    Sparklr -> Tonr : Response image
+    deactivate Sparklr
+    Tonr -> Browser : Response image
+	end
+    
+    Browser -> ResourceOwner : /tonr/index.jsp (first page)
+deactivate Browser
+
+@enduml

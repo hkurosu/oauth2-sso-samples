@@ -1,0 +1,90 @@
+@startuml
+
+title Spring oauth Resource Filter process
+
+participant "Tonr \n(Client)" as Tonr 
+participant "Sparklr \n(Resource Server)" as Sparklr
+entity LocalTokenStore
+participant "Keyhole \n(Authorization Server)" as Keyhole
+entity TokenStore
+
+note over of Tonr #aqua
+Client should have the access token at this point. 
+Using Bearer header to access the reource server.
+end note
+ 
+note over of Sparklr #aqua
+- Sparklr is a resource server of Tonr.
+- Sparklr is a client of Keyhole (Authorization server).
+end note
+
+
+note over of LocalTokenStore #lightgreen
+Sparklr has a local access token store (cache).
+(NOTE) spring supports in-memory and 
+JDBC implementation
+end note
+
+note over of Keyhole #aqua
+Keyhole is a resource server of Tonr and Sparklr 
+for userinfo service (/me)
+end note
+
+note over of TokenStore #lightgreen
+Keyhole has a access token store (cache)
+to keep all active tokens.
+(NOTE) spring supports in-memory and 
+JDBC implementation
+end note
+
+activate Tonr
+    
+    
+    	Tonr -> Sparklr : GET /sparklr/photos (Autorization: Bearer xxx-xxx-xxx)
+    	
+        activate Sparklr
+        Sparklr -> LocalTokenStore : read the token from local store
+    	LocalTokenStore --> Sparklr : returns the token if exists    
+    
+    	alt if token exists and not expired
+        
+        	Sparklr -> LocalTokenStore : red the authentication from the local store
+        	LocalTokenStore --> Sparklr : returns the cached authentication
+            
+ 		else not exists in the local store
+        
+            Sparklr -> Keyhole : GET /me (Authorization: Bearer xxx-xxx-xxx)
+            
+            activate Keyhole
+  
+  			Keyhole -> TokenStore : get the authentication of the token
+            TokenStore --> Keyhole : returns the authentication
+            
+            alt if the token is valid
+            
+            	TokenStore --> Keyhole : returns the authentication
+     			Keyhole -> Sparklr : returns the authentication if exist
+            
+            else the token is invalid
+            
+            	Keyhole -> Sparklr : returns error if not exists 
+  				Sparklr -> Tonr : return 40x (authentication failure) if not exist			
+           
+           	end
+  	        
+            deactivate Keyhole
+            
+            Sparklr -> LocalTokenStore : save the token and the authentication
+		end
+
+		Sparklr -> Sparklr : authenticate
+        
+		Sparklr -> Sparklr : do Resource service
+        
+        Sparklr -> Tonr : return 20x (OK,...) or 500 (Server error)
+        
+        deactivate Sparklr
+    
+    deactivate Tonr
+    
+@enduml

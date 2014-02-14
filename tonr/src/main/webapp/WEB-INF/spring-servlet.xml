@@ -25,53 +25,42 @@
 		<custom-filter ref="oauth2SingleSignOnFilter" position="PRE_AUTH_FILTER" />
 	</http>
 
-	<authentication-manager xmlns="http://www.springframework.org/schema/security" alias="authenticationManager" />
-
-	<oauth:resource-server id="oauth2ResourceFilter" resource-id="sparklr"/>
-	
-	<!-- <bean id="sparklrRestTemplate" class="org.springframework.security.oauth2.client.OAuth2RestTemplate">
-		<constructor-arg ref="sparklr"/>
-	</bean>
-	<oauth:rest-template id="sparklrRestTemplate" resource="sparklr" />
-	 -->
-	 
-	<bean id="oauth2SingleSignOnFilter" class="org.springframework.security.oauth.examples.keyhole.OAuth2SingleSignOnFilter">
-		<property name="resource" ref="sparklr"/>
-		<property name="userInfoUri" value="${userInfoUri}"/>
-	</bean>
-	
 	<bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
  		<property name="loginFormUrl" value="${loginFormUri}"/>
  	</bean>
+
+	<authentication-manager xmlns="http://www.springframework.org/schema/security" alias="authenticationManager" />
+	
+	<bean id="tokenStore"
+		class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore" />
+		
+	<bean id="clientTokenServices" class="org.springframework.security.oauth.examples.keyhole.token.LocalClientTokenServices">
+		<property name="tokenStore" ref="tokenStore"/>
+	</bean>
+
+	<bean id="oauth2SingleSignOnFilter"
+		class="org.springframework.security.oauth.examples.keyhole.filter.OAuth2SingleSignOnFilter">
+		<property name="restTemplate">
+			<oauth:rest-template resource="sparklr" />
+		</property>
+		<property name="clientTokenServices" ref="clientTokenServices" />
+		<property name="userInfoUri" value="${userInfoUri}" />
+		<property name="jwtTokenConverter">
+			<bean
+				class="org.springframework.security.oauth2.provider.token.JwtTokenServices">
+				<property name="signingKey" value="${jwtSigningKey}" />
+			</bean>
+		</property>
+	</bean>	
 	
 	<!--apply the oauth client context -->
 	<oauth:client id="oauth2ClientFilter" />
 
 	<!--define an oauth 2 resource for sparklr -->
-	<oauth:resource id="sparklr" type="authorization_code"
-		client-id="tonr" client-secret="secret" access-token-uri="${accessTokenUri}"
-		user-authorization-uri="${userAuthorizationUri}" scope="read,write" />
+	<import resource="classpath:/spring/oauth2-resources.xml" />
 
-	<!--define an oauth 2 resource for client with registered redirect on sparklr -->
-	<oauth:resource id="sparklrRedirect" type="authorization_code"
-		client-id="tonr-with-redirect" access-token-uri="${accessTokenUri}"
-		user-authorization-uri="${userAuthorizationUri}" scope="read,write"
-		client-secret="secret" use-current-uri="false" />
-
-	<!--define an oauth 2 resource for trusted client on sparklr -->
-	<oauth:resource id="trusted" type="client_credentials"
-		client-id="my-client-with-registered-redirect" access-token-uri="${accessTokenUri}"
-		scope="trust" />
-
-	<!--define an oauth 2 resource for facebook. according to the facebook docs, 
-		the 'client-id' is the App ID, and the 'client-secret' is the App Secret -->
-	<oauth:resource id="facebook" type="authorization_code"
-		client-id="233668646673605" client-secret="33b17e044ee6a4fa383f46ec6e28ea1d"
-		authentication-scheme="query" access-token-uri="https://graph.facebook.com/oauth/access_token"
-		user-authorization-uri="https://www.facebook.com/dialog/oauth"
-		token-name="oauth_token" client-authentication-scheme="form" />
-
-	<context:property-placeholder location="classpath:/sparklr.properties" />
+	<context:property-placeholder
+		location="classpath:/keyhole.properties,classpath:/sparklr.properties" />
 
 	<bean id="conversionService"
 		class="org.springframework.context.support.ConversionServiceFactoryBean">
@@ -149,6 +138,18 @@
 			</oauth:rest-template>
 		</property>
 	</bean>
+	
+	<bean id="accessTokenProvider" class="org.springframework.security.oauth2.client.token.AccessTokenProviderChain">
+		<constructor-arg type="java.util.List">
+			<list value-type="org.springframework.security.oauth2.client.token.AccessTokenProvider">
+				<bean class="org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider"/>
+				<bean class="org.springframework.security.oauth2.client.token.grant.implicit.ImplicitAccessTokenProvider"/>
+				<bean class="org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider"/>
+				<bean class="org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider"/>
+			</list>
+		</constructor-arg>
+		<property name="clientTokenServices" ref="clientTokenServices" />
+	</bean>
 
 	<bean id="sparklrService"
 		class="org.springframework.security.oauth.examples.tonr.impl.SparklrServiceImpl">
@@ -156,10 +157,10 @@
 		<property name="sparklrTrustedMessageURL" value="${sparklrTrustedMessageURL}" />
 		<property name="sparklrPhotoURLPattern" value="${sparklrPhotoURLPattern}" />
 		<property name="sparklrRestTemplate">
-			<oauth:rest-template resource="sparklr" />
+			<oauth:rest-template resource="sparklr"	access-token-provider="accessTokenProvider" />
 		</property>
 		<property name="trustedClientRestTemplate">
-			<oauth:rest-template resource="trusted" />
+			<oauth:rest-template resource="trusted"	access-token-provider="accessTokenProvider" />
 		</property>
 	</bean>
 

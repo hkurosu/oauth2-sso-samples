@@ -101,6 +101,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>${pom.groupId}</groupId>
+			<artifactId>oauth2sso</artifactId>
+			<version>${pom.version}</version>
+		</dependency>	
+		
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
 			<version>${project.version}</version>

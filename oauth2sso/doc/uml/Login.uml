@@ -1,0 +1,65 @@
+@startuml
+
+title Login flow 
+
+
+Actor ResourceOwner
+participant Browser
+participant "Tonr\n(Client)" as Tonr 
+participant "Sparklr\n(Resource Server)" as Sparklr
+participant "Keyhole\n(Authorization Server)" as Keyhole
+
+note over of Tonr #aqua
+Client should have the access token at this point. 
+Using Bearer header to access the reource server.
+end note
+ 
+note over of Sparklr #aqua
+- Sparklr is a resource server of Tonr.
+- Sparklr is a client of Keyhole (Authorization server).
+end note
+
+note over of Keyhole #aqua
+Keyhole is a resource server of Tonr and Sparklr 
+for userinfo service (/me)
+end note
+
+ResourceOwner -> Browser: Type /tonr/index.jsp
+activate Browser
+    Browser -> Tonr : GET /tonr/index.jsp
+   
+    Tonr -> Keyhole : GET /oauth/authorize
+    Keyhole -> Browser : login form (/keyhole/login.do)
+    
+    Browser --> ResourceOwner : Need username and password
+    ResourceOwner -> Browser : Type username and password
+    
+    Browser -> Keyhole : POST /oauth/authorize
+    Keyhole -> Browser : authorized
+    
+    note over of Browser
+    Browser redirect to /tonr/index.jsp with 
+    authentication code
+    end note
+    
+    activate Browser
+    Browser -> Tonr : GET /tonr/index.jsp?code=123&state=xyz
+    
+    Tonr -> Keyhole : GET /oauth/token  (give me a access token!)
+    Keyhole -> Tonr : Here is your token!
+    
+    Tonr -> Keyhole : GET /me (give me a user info!)
+    Keyhole -> Tonr : Here is your user info!
+    note over of Tonr #aqua
+    authentication succeed. 
+    Keep it in the token store.
+    end note
+    
+    Tonr -> Browser : Here is your first page (w/ JSESSIONID)
+    
+    deactivate Browser
+    
+    Browser -> ResourceOwner : /tonr/index.jsp (first page)
+deactivate Browser
+
+@enduml

@@ -9,9 +9,9 @@
 		<relativePath>../../..</relativePath>
 	</parent>
 
-	<artifactId>tonr2</artifactId>
-	<packaging>war</packaging>
-	<name>OAuth for Spring Security - Tonr2 (OAuth 2 Client Example)</name>
+	<artifactId>oauth2sso</artifactId>
+	<packaging>jar</packaging>
+	<name>OAuth2 for Spring Security - Single Sign On</name>
 
 	<profiles>
 		<profile>
@@ -69,17 +69,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>tomcat-maven-plugin</artifactId>
-					<configuration>
-						<addContextWarDependencies>true</addContextWarDependencies>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
 	<repositories>
@@ -94,20 +83,12 @@
 			<url>http://maven.springframework.org/release</url>
 		</repository>
 		<repository>
-		    <id>spring-snapshot</id>
-		    <name>Spring Snapshot Repository</name>
-		    <url>http://repo.springsource.org/snapshot</url>
-		  </repository>		
+			<id>java.net</id>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>${pom.groupId}</groupId>
-			<artifactId>oauth2sso</artifactId>
-			<version>${pom.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
@@ -116,37 +97,13 @@
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-taglibs</artifactId>
-			<version>${spring.security.version}</version>
+			<artifactId>spring-security-jwt</artifactId>
+			<version>1.0.2.BUILD-SNAPSHOT</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 
@@ -158,47 +115,37 @@
 
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
+			<artifactId>spring-beans</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-expression</artifactId>
+			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
+			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.5.5</version>
+			<version>1.8.3</version>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
+			<!-- Needed for testing (with Spring 4 only), but not at runtime -->
 			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
-			<scope>test</scope>
-		</dependency>
 
 	</dependencies>
 
