@@ -9,24 +9,9 @@ participant "Tonr\n(Client)" as Tonr
 participant "Sparklr\n(Resource Server)" as Sparklr
 participant "Keyhole\n(Authorization Server)" as Keyhole
 
-note over of Tonr #aqua
-Client should have the access token at this point. 
-Using Bearer header to access the reource server.
-end note
- 
-note over of Sparklr #aqua
-- Sparklr is a resource server of Tonr.
-- Sparklr is a client of Keyhole (Authorization server).
-end note
-
-note over of Keyhole #aqua
-Keyhole is a resource server of Tonr and Sparklr 
-for userinfo service (/me)
-end note
-
-ResourceOwner -> Browser: Type /tonr/index.jsp
+ResourceOwner -> Browser: Type /tonr/demo.html
 activate Browser
-    Browser -> Tonr : GET /tonr/index.jsp
+    Browser -> Tonr : GET /tonr/demo.html
    
     Tonr -> Keyhole : GET /oauth/authorize
 	note right of Keyhole #pink
@@ -42,27 +27,13 @@ activate Browser
     ResourceOwner -> Browser : Type username and password
     
     Browser -> Keyhole : POST /oauth/authorize
-    Keyhole -> Browser : authorized
+
+    Keyhole -> Browser : Location: http://localhost:8080/tonr2/demo.html\n#access_token=86536919-d1d5-4898-89cc-8c2b3b498478\n&token_type=bearer\n&state=123\n&expires_in=43199\n&client_id=tonr
     deactivate Keyhole
     
-    note over of Browser
-    Browser redirect to /tonr/index.jsp with 
-    authentication code
-    end note
     
     activate Browser
-    Browser -> Tonr : GET /tonr/index.jsp?code=123&state=xyz
-    
-    Tonr -> Keyhole : GET /oauth/token  (give me a access token!)
-    note right of Keyhole #pink
-    Token Endpoint 
-    /oauth/token
-    (Spring Provided)
-    end note
-    
-    activate Keyhole
-    Keyhole -> Tonr : Here is your token!
-    deactivate Keyhole
+    Browser -> Tonr : Redirect /tonr/demo.html#...
     
     Tonr -> Keyhole : GET /me (give me a user info!)
     note right of Keyhole #lightgreen
@@ -79,11 +50,11 @@ activate Browser
     end note
     deactivate Keyhole
     
-    Tonr -> Browser : Here is your first page (w/ JSESSIONID)
+    Tonr -> Browser : Here is your first page
     
     deactivate Browser
     
-    Browser -> ResourceOwner : /tonr/index.jsp (first page)
+    Browser -> ResourceOwner : /tonr/demo.html (first page)
 deactivate Browser
 
 @enduml

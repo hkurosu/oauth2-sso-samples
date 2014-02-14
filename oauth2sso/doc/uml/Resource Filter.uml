@@ -18,7 +18,6 @@ note over of Sparklr #aqua
 - Sparklr is a client of Keyhole (Authorization server).
 end note
 
-
 note over of LocalTokenStore #lightgreen
 Sparklr has a local access token store (cache).
 (NOTE) spring supports in-memory and 
@@ -39,10 +38,13 @@ end note
 
 activate Tonr
     
-    
     	Tonr -> Sparklr : GET /sparklr/photos (Autorization: Bearer xxx-xxx-xxx)
-    	
+  
         activate Sparklr
+ 
+        Sparklr -> Sparklr : extract the token from Authorization header
+        Sparklr -> Sparklr : authenticate
+ 	    activate Sparklr
         Sparklr -> LocalTokenStore : read the token from local store
     	LocalTokenStore --> Sparklr : returns the token if exists    
     
@@ -76,11 +78,13 @@ activate Tonr
             
             Sparklr -> LocalTokenStore : save the token and the authentication
 		end
+		
+		Sparklr --> Sparklr : end authenticate
+   
+		deactivate Sparklr
 
-		Sparklr -> Sparklr : authenticate
-        
-		Sparklr -> Sparklr : do Resource service
-        
+		Sparklr -> Sparklr : do Resource service      
+
         Sparklr -> Tonr : return 20x (OK,...) or 500 (Server error)
         
         deactivate Sparklr

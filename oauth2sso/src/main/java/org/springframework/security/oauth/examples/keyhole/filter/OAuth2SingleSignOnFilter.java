@@ -97,8 +97,10 @@ public class OAuth2SingleSignOnFilter extends AbstractPreAuthenticatedProcessing
 		String jwtToken = restClient.getForObject(userInfoUri, String.class);
 		OAuth2Authentication authentication = jwtTokenConverter.loadAuthentication(jwtToken);
 
-		//
-		clientTokenServices.saveAccessToken(resource, authentication, restClient.getAccessToken());
+		// save the token to the token store.
+		if (clientTokenServices != null) {
+			clientTokenServices.saveAccessToken(resource, authentication, restClient.getAccessToken());
+		}
 
 		// work-around: JWT does not carry the principal as User, but as String.
 		// sparklr apps needs to have User principals to verify the grant

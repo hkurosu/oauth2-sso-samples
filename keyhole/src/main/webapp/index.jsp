@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-  <title>Sparklr</title>
+  <title>Keyhole</title>
   <link type="text/css" rel="stylesheet" href="<c:url value="/style.css"/>"/>
 
   <authz:authorize ifAllGranted="ROLE_USER">
@@ -20,20 +20,18 @@
 </head>
 <body>
 
-  <h1>Sparklr</h1>
+  <h1>Keyhole (OAuth2 Single Sign On Server)</h1>
 
   <div id="content">
-    <h2>Home</h2>
-
-    <p>This is a great site to store and view your photos. Unfortunately, we don't have any services
-    for printing your photos.  For that, you'll have to go to Tonr.</p>
-
     <authz:authorize ifNotGranted="ROLE_USER">
       <h2>Login</h2>
-      <form id="loginForm" name="loginForm" action="<c:url value="/login.do"/>" method="post">
+
+   		<p>Once you login, TONR and SPARKLR application will never ask your username and password again.</p>
+
+        <form id="loginForm" name="loginForm" action="<c:url value="/login.do"/>" method="post">
         <p><label>Username: <input type='text' name='j_username' value="marissa"></label></p>
         <p><label>Password: <input type='text' name='j_password' value="koala"></label></p>
-        
+           
         <p><input name="login" value="Login" type="submit"></p>
       </form>
     </authz:authorize>

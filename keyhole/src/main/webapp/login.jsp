@@ -4,14 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Sparklr</title>
+<title>Keyhole</title>
 <link type="text/css" rel="stylesheet"
 	href="<c:url value="/style.css"/>" />
 </head>
 
 <body>
 
-	<h1>Sparklr</h1>
+  	<h1>Keyhole (OAuth2 Single Sign On Server)</h1>
 
 	<div id="content">
 		<c:if test="${not empty param.authentication_error}">
@@ -30,6 +30,9 @@
 		<p>We've got a grand total of 2 users: marissa and paul. Go ahead
 			and log in. Marissa's password is "koala" and Paul's password is
 			"emu".</p>
+			
+		<p>Once you login, TONR and SPARKLR application will never ask your username and password again.</p>
+			
 		<form id="loginForm" name="loginForm"
 			action="<c:url value="/login.do"/>" method="post">
 			<p>

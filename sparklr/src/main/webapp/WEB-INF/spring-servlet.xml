@@ -41,9 +41,14 @@
 	<oauth:client id="oauth2ClientFilter" />
 	
 	<!-- single sign on filter -->
+	<bean id="clientTokenServices" class="org.springframework.security.oauth.examples.keyhole.token.LocalClientTokenServices">
+		<property name="tokenStore" ref="tokenStore"/>
+	</bean>
+	
 	<bean id="oauth2SingleSignOnFilter"
 		class="org.springframework.security.oauth.examples.keyhole.filter.OAuth2SingleSignOnFilter">
 		<property name="resource" ref="sparklr" />
+<!-- 		<property name="clientTokenServices" ref="clientTokenServices" /> -->
 		<property name="userInfoUri" value="${userInfoUri}" />
 		<property name="jwtTokenConverter">
 			<bean
