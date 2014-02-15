@@ -24,5 +24,9 @@ complain about spring-security-oauth2-2.0.xsd file if they are not imported).
 
 Now you can deploy all 3 apps (tonr2, sparklr2, keyhole2) into your Servers environment!
 
+# Next step
+
+See this document how these sample apps work:
+https://github.com/hkurosu/oauth2-sso-samples/blob/master/docs/OAuth2%20Single%20Sign%20On%20with%20Spring%20(Demo).pptx
 
 
