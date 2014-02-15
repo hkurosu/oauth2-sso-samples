@@ -105,11 +105,11 @@
 			<artifactId>oauth2sso</artifactId>
 			<version>${pom.version}</version>
 		</dependency>	
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
 			<version>${spring.oauth.version}</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
