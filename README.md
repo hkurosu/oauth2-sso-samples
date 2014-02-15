@@ -19,6 +19,10 @@ Normally executing "mvn install" in the spring-security-oauth directory will do 
 # Run in eclipse
 
 - Import tonr, sparklr, keyhole and oauth2sso with "Existing Maven projects" (Import -> Maven)
-- Import also spring-security-oauth2 and spring-security-jwt from spring-security-oauth.
+- Import also spring-security-oauth2 and spring-security-jwt from spring-security-oauth. (This should not be necessary, but eclipse will 
+complain about spring-security-oauth2-2.0.xsd file if they are not imported).
+
+Now you can deploy all 3 apps (tonr2, sparklr2, keyhole2) into your Servers environment!
+
 
 
