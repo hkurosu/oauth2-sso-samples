@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:sec="http://www.springframework.org/schema/security" xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
@@ -15,7 +17,24 @@
 		class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOnFilter">
 		<constructor-arg value="${loginFormUri}" />
 		<property name="authenticationManager" ref="oauth2SingleSignOnAuthenticationManager"/>
+		<property name="oauth2ClientContextConfig" value="OAUTH2_CLIENT_CONTEXT" />
 	</bean>	
+	
+	<bean id="oauth2SingleSignOutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<constructor-arg value="/index.jsp"/>
+		<constructor-arg>
+			<bean class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOutHandler">
+				<property name="revokeTokenEndpointUri" value="${revokeTokenUri}" />
+				<property name="resource" ref="sso" />
+				<property name="clientTokenServices" ref="clientTokenServices" />
+				<property name="oauth2ClientContextConfig" value="OAUTH2_CLIENT_CONTEXT" />		
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="${logoutUri}" />
+	</bean>
 		
 	<bean id="oauth2SingleSignOnAuthenticationProvider" class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOnAuhtencationProvider">
 		<property name="userInfoUri" value="${userInfoUri}" />

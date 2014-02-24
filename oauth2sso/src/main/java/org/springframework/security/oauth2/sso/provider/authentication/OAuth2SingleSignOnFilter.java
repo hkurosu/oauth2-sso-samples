@@ -18,12 +18,22 @@ import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.client.token.DefaultAccessTokenRequest;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.util.Assert;
 
 /**
  * @author hirobumi.kurosu
  * 
  */
 public class OAuth2SingleSignOnFilter extends AbstractAuthenticationProcessingFilter {
+
+	private String oauth2ClientContextConfig;
+
+
+	@Override
+	public void afterPropertiesSet() {
+		super.afterPropertiesSet();
+		Assert.notNull(oauth2ClientContextConfig, "oauth2ClientContextConfig must be specified");
+	}
 
 	public OAuth2SingleSignOnFilter(String defaultFilterProcessesUrl) {
 		super(defaultFilterProcessesUrl);
@@ -40,7 +50,7 @@ public class OAuth2SingleSignOnFilter extends AbstractAuthenticationProcessingFi
 	protected OAuth2ClientContext prepareClientContext(HttpServletRequest request) {
 		HttpSession httpSession = request.getSession(true); // ensure HttpSession
 		// lookup saved clientContext
-		OAuth2ClientContext clientContext = (OAuth2ClientContext) httpSession.getAttribute("oauth2ClientContext");
+		OAuth2ClientContext clientContext = (OAuth2ClientContext) httpSession.getAttribute(oauth2ClientContextConfig);
 		if (clientContext == null) { // not yet, saved
 			AccessTokenRequest tokenRequest = new DefaultAccessTokenRequest(request.getParameterMap());
 			// tokenRequest.setCurrentUri(request.getRequestURL().toString());
@@ -54,6 +64,20 @@ public class OAuth2SingleSignOnFilter extends AbstractAuthenticationProcessingFi
 		}
 
 		return clientContext;
+	}
+
+	/**
+	 * @return the oauth2ClientContextConfig
+	 */
+	public String getOauth2ClientContextConfig() {
+		return oauth2ClientContextConfig;
+	}
+
+	/**
+	 * @param oauth2ClientContextConfig the oauth2ClientContextConfig to set
+	 */
+	public void setOauth2ClientContextConfig(String oauth2ClientContextConfig) {
+		this.oauth2ClientContextConfig = oauth2ClientContextConfig;
 	}
 
 	@SuppressWarnings("serial")
