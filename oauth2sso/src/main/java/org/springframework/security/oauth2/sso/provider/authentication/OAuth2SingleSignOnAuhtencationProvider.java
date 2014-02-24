@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 import org.springframework.security.oauth2.client.token.ClientTokenServices;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.JwtTokenServices;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOnFilter.OAuth2ClientContextAuthentication;
 import org.springframework.util.Assert;
 
 /**
@@ -53,16 +53,12 @@ public class OAuth2SingleSignOnAuhtencationProvider implements AuthenticationPro
 		Assert.notNull(clientTokenServices, "clientTokenServices must be specieid");;
 	}
 
-	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		if (!supports(authentication.getClass())) {
 			return null;
 		}
-		if (!(authentication.getPrincipal() instanceof OAuth2ClientContext)) {
-			return null;
-		}
-		OAuth2ClientContext clientContext = (OAuth2ClientContext) authentication.getPrincipal();
+		OAuth2ClientContext clientContext = ((OAuth2ClientContextAuthentication) authentication).getClientContext();
 		OAuth2RestTemplate restClient = new OAuth2RestTemplate(resource, clientContext);
 		
 		// get authentication from authorization server
@@ -79,6 +75,6 @@ public class OAuth2SingleSignOnAuhtencationProvider implements AuthenticationPro
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return PreAuthenticatedAuthenticationToken.class.isAssignableFrom(authentication);
+		return OAuth2ClientContextAuthentication.class.isAssignableFrom(authentication);
 	}
 }

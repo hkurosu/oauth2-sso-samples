@@ -13,6 +13,7 @@
 
 	<bean id="oauth2SingleSignOnFilter"
 		class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOnFilter">
+		<constructor-arg value="${loginFormUri}" />
 		<property name="authenticationManager" ref="oauth2SingleSignOnAuthenticationManager"/>
 	</bean>	
 		

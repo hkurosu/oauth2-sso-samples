@@ -22,7 +22,8 @@
 		<anonymous/>
 		<custom-filter ref="oauth2ClientFilter"	 before="PRE_AUTH_FILTER" />
 		<!-- <custom-filter ref="oauth2ResourceFilter" position="PRE_AUTH_FILTER" /> -->
-		<custom-filter ref="oauth2SingleSignOnFilter" position="PRE_AUTH_FILTER" />
+		<custom-filter ref="oauth2SingleSignOnFilter"
+			position="FORM_LOGIN_FILTER" />
 	</http>
 
 	<bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
