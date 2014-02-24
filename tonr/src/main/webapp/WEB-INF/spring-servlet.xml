@@ -17,13 +17,12 @@
 		entry-point-ref='oauthAuthenticationEntryPoint'>
 		<intercept-url pattern="/sparklr/**" access="ROLE_USER" />
 		<intercept-url pattern="/facebook/**" access="ROLE_USER" />
-		<intercept-url pattern="/**" access="ROLE_USER" />
+		<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<logout logout-success-url="/index.jsp" logout-url="/logout.do" />
 		<anonymous/>
 		<custom-filter ref="oauth2ClientFilter"	 before="PRE_AUTH_FILTER" />
 		<!-- <custom-filter ref="oauth2ResourceFilter" position="PRE_AUTH_FILTER" /> -->
-		<custom-filter ref="oauth2SingleSignOnFilter"
-			position="FORM_LOGIN_FILTER" />
+		<custom-filter ref="oauth2SingleSignOnFilter" position="FORM_LOGIN_FILTER" />
 	</http>
 
 	<bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
