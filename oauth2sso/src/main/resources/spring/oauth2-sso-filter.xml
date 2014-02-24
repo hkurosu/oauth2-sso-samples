@@ -19,7 +19,7 @@
 		
 	<bean id="oauth2SingleSignOnAuthenticationProvider" class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOnAuhtencationProvider">
 		<property name="userInfoUri" value="${userInfoUri}" />
-		<property name="resource" ref="sparklr" />
+		<property name="resource" ref="sso" />
 		<property name="clientTokenServices" ref="clientTokenServices" />
 		<property name="jwtTokenConverter" ref="oauth2SsoJwtTokenConverter" />
 	</bean>

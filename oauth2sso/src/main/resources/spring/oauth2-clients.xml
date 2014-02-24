@@ -32,13 +32,15 @@
 		<oauth:client client-id="my-untrusted-client-with-registered-redirect"
 			authorized-grant-types="authorization_code" authorities="ROLE_CLIENT"
 			redirect-uri="http://anywhere" scope="read" />
-		<oauth:client client-id="tonr" resource-ids="sparklr"
-			authorized-grant-types="authorization_code,implicit" authorities="ROLE_CLIENT"
-			scope="read,write" secret="secret" />
+		<oauth:client client-id="tonr" resource-ids="sparklr,sso"
+			authorized-grant-types="authorization_code,implicit"
+			authorities="ROLE_CLIENT" scope="read,write" secret="secret"
+			autoapprove="true" />
 		<oauth:client client-id="tonr-with-redirect"
 			resource-ids="sparklr" authorized-grant-types="authorization_code,implicit"
 			authorities="ROLE_CLIENT" scope="read,write" secret="secret"
 			redirect-uri="${tonr.redirect:http://localhost:8080/tonr2/sparklr/redirect}" />
+			
 	</oauth:client-details-service>
 
 </beans>
