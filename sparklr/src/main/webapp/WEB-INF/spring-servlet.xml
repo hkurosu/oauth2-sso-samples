@@ -41,22 +41,11 @@
 	<oauth:client id="oauth2ClientFilter" />
 	
 	<!-- single sign on filter -->
-	<bean id="clientTokenServices" class="org.springframework.security.oauth.examples.keyhole.token.LocalClientTokenServices">
+	<bean id="clientTokenServices" class="org.springframework.security.oauth2.sso.provider.token.LocalClientTokenServices">
 		<property name="tokenStore" ref="tokenStore"/>
 	</bean>
 	
-	<bean id="oauth2SingleSignOnFilter"
-		class="org.springframework.security.oauth.examples.keyhole.filter.OAuth2SingleSignOnFilter">
-		<property name="resource" ref="sparklr" />
-<!-- 		<property name="clientTokenServices" ref="clientTokenServices" /> -->
-		<property name="userInfoUri" value="${userInfoUri}" />
-		<property name="jwtTokenConverter">
-			<bean
-				class="org.springframework.security.oauth2.provider.token.JwtTokenServices">
-				<property name="signingKey" value="${jwtSigningKey}" />
-			</bean>
-		</property>
-	</bean>
+	<import resource="classpath:spring/oauth2-sso-filter.xml" />
 
 	<bean id="loginUrlAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
  		<property name="loginFormUrl" value="${loginFormUri}"/>
@@ -95,12 +84,12 @@
 	<import resource="classpath:/spring/oauth2-resources.xml" />
 
 	<bean id="remoteTokenServices"
-		class="org.springframework.security.oauth.examples.keyhole.token.RemoteResourceServerTokenServices">
+		class="org.springframework.security.oauth2.sso.provider.token.RemoteResourceServerTokenServices">
 		<property name="tokenStore" ref="tokenStore" />
 		<property name="resource" ref="sparklr" />
 		<property name="userInfoUri" value="${userInfoUri}" />
 		<property name="jwtTokenServices">
-			<bean class="org.springframework.security.oauth2.provider.token.JwtTokenServices">
+			<bean class="org.springframework.security.oauth2.sso.provider.token.JwtTokenConverter">
 				<property name="signingKey" value="${jwtSigningKey}" />
 			</bean>
 		</property>

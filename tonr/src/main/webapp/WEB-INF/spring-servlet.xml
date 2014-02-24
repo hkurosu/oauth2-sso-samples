@@ -34,24 +34,11 @@
 	<bean id="tokenStore"
 		class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore" />
 		
-	<bean id="clientTokenServices" class="org.springframework.security.oauth.examples.keyhole.token.LocalClientTokenServices">
+	<bean id="clientTokenServices" class="org.springframework.security.oauth2.sso.provider.token.LocalClientTokenServices">
 		<property name="tokenStore" ref="tokenStore"/>
 	</bean>
 
-	<bean id="oauth2SingleSignOnFilter"
-		class="org.springframework.security.oauth.examples.keyhole.filter.OAuth2SingleSignOnFilter">
-		<property name="restTemplate">
-			<oauth:rest-template resource="sparklr" />
-		</property>
-		<property name="clientTokenServices" ref="clientTokenServices" />
-		<property name="userInfoUri" value="${userInfoUri}" />
-		<property name="jwtTokenConverter">
-			<bean
-				class="org.springframework.security.oauth2.provider.token.JwtTokenServices">
-				<property name="signingKey" value="${jwtSigningKey}" />
-			</bean>
-		</property>
-	</bean>	
+	<import resource="classpath:/spring/oauth2-sso-filter.xml" />
 	
 	<!--apply the oauth client context -->
 	<oauth:client id="oauth2ClientFilter" />

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.springframework.security.oauth.examples.keyhole.token;
+package org.springframework.security.oauth2.sso.provider.token;
 
 import java.util.Collection;
 import java.util.Iterator;

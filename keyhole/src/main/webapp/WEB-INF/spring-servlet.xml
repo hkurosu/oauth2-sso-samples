@@ -254,7 +254,7 @@
 	<bean id="userController"
 		class="org.springframework.security.oauth.examples.keyhole.mvc.UserController">
 		<property name="jwtTokenServices">
-			<bean class="org.springframework.security.oauth2.provider.token.JwtTokenServices">
+			<bean class="org.springframework.security.oauth2.sso.provider.token.JwtTokenConverter">
 				<property name="signingKey" value="${jwtSigningKey}" />
 			</bean>
 		</property>

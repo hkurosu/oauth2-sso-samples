@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.springframework.security.oauth.examples.keyhole.token;
+package org.springframework.security.oauth2.sso.provider.token;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
