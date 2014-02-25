@@ -35,7 +35,7 @@
     </authz:authorize>
     
     <br/>
-    <p><a href="<c:url value="/logout.do"/>">Logout</a></p>
+    <p><a href="<c:url value="/j_spring_security_logout"/>">Logout</a></p>
 
     <p class="footer">Courtesy <a href="http://www.openwebdesign.org">Open Web Design</a> Thanks to <a href="http://www.dubaiapartments.biz/">Dubai Hotels</a></p>
   </div>

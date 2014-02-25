@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
  *
  */
 public class OAuth2SingleSignOnAuhtencationProvider implements AuthenticationProvider, InitializingBean {
+
 	private String userInfoUri;
 
 	private JwtTokenServices jwtTokenConverter;

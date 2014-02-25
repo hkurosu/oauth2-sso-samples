@@ -5,11 +5,14 @@ package org.springframework.security.oauth2.sso.provider.authentication;
 
 import java.io.IOException;
 
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
@@ -26,8 +29,9 @@ import org.springframework.util.Assert;
  */
 public class OAuth2SingleSignOnFilter extends AbstractAuthenticationProcessingFilter {
 
-	private String oauth2ClientContextConfig;
+	protected final Log logger = LogFactory.getLog(getClass());
 
+	private String oauth2ClientContextConfig;
 
 	@Override
 	public void afterPropertiesSet() {
@@ -47,6 +51,25 @@ public class OAuth2SingleSignOnFilter extends AbstractAuthenticationProcessingFi
 		return getAuthenticationManager().authenticate(authentication);
 	}
 
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+			FilterChain chain, Authentication authResult) throws IOException, ServletException {
+		super.successfulAuthentication(request, response, chain, authResult);
+
+		// clear clientContext
+		HttpSession httpSession = request.getSession(false);
+		if (httpSession != null) {
+			if (logger.isDebugEnabled()) {
+				if (httpSession.getAttribute(oauth2ClientContextConfig) != null) {
+					logger.debug("Remove session client context: "
+							+ httpSession.getAttribute(oauth2ClientContextConfig));
+				}
+			}
+			httpSession.removeAttribute(oauth2ClientContextConfig);
+		}
+
+	}
+
 	protected OAuth2ClientContext prepareClientContext(HttpServletRequest request) {
 		HttpSession httpSession = request.getSession(true); // ensure HttpSession
 		// lookup saved clientContext
@@ -56,7 +79,8 @@ public class OAuth2SingleSignOnFilter extends AbstractAuthenticationProcessingFi
 			// tokenRequest.setCurrentUri(request.getRequestURL().toString());
 			tokenRequest.setCurrentUri((String) request.getAttribute("currentUri"));
 			clientContext = new DefaultOAuth2ClientContext(tokenRequest);
-			httpSession.setAttribute("oauth2ClientContext", clientContext);
+			httpSession.setAttribute(oauth2ClientContextConfig, clientContext);
+			logger.debug("Created new session client context: " + clientContext);
 		}
 		else { // refresh code
 			String code = request.getParameter("code");
