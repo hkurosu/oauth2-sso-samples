@@ -24,16 +24,12 @@
 		p:restTemplate-ref="oauth2RestTemplate" />
 
 	<bean id="oauth2RemoteTokenServices" class="org.springframework.security.oauth2.provider.token.RemoteTokenServices"
-		p:clientId="sparklr" 
+		p:clientId="tonr" 
 		p:clientSecret="secret" 
 		p:checkTokenEndpointUrl="${checkToeknUri}"
 	/>
-	
-	<bean id="oauth2RestTemplate"
-		class="org.springframework.security.oauth2.client.OAuth2RestTemplate"
-		c:resource-ref="sso" scope="session">
-		<aop:scoped-proxy proxy-target-class="false"/>
-	</bean>
+
+	<oauth:rest-template id="oauth2RestTemplate" resource="sso" />
 
 	<bean id="oauth2SingleSignOutFilter"
 		class="org.springframework.security.web.authentication.logout.LogoutFilter">

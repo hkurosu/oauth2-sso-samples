@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 	<context:property-placeholder location="classpath:/keyhole.properties" />
-
+	
 	<!-- Just for testing... -->
 	<http pattern="/oauth/cache_approvals" security="none"
 		xmlns="http://www.springframework.org/schema/security" />
@@ -28,6 +28,20 @@
 		<http-basic entry-point-ref="clientAuthenticationEntryPoint" />
 		<!-- include this only if you need to authenticate clients via request 
 			parameters -->
+		<custom-filter ref="clientCredentialsTokenEndpointFilter"
+			after="BASIC_AUTH_FILTER" />
+		<access-denied-handler ref="oauthAccessDeniedHandler" />
+	</http>
+	
+	<http pattern="/oauth/check_token" create-session="stateless"
+		authentication-manager-ref="clientAuthenticationManager"
+		xmlns="http://www.springframework.org/schema/security">
+		<intercept-url pattern="/**" method="GET" access="ROLE_DENY" />
+		<intercept-url pattern="/**" method="PUT" access="ROLE_DENY" />
+		<intercept-url pattern="/**" method="DELETE" access="ROLE_DENY" />
+		<intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
+		<anonymous enabled="false" />
+		<http-basic entry-point-ref="clientAuthenticationEntryPoint" />
 		<custom-filter ref="clientCredentialsTokenEndpointFilter"
 			after="BASIC_AUTH_FILTER" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
@@ -231,6 +245,11 @@
 		class="org.springframework.security.oauth.examples.keyhole.mvc.AccessConfirmationController">
 		<property name="clientDetailsService" ref="clientDetails" />
 		<property name="approvalStore" ref="approvalStore" />
+	</bean>
+	
+	<!-- /check_token framework endpoint -->
+	<bean id="checkTokenEndpoint" class="org.springframework.security.oauth2.provider.endpoint.CheckTokenEndpoint">
+		<constructor-arg ref="tokenServices"/>
 	</bean>
 	
 </beans>
