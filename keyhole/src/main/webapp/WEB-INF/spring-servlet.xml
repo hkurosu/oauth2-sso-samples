@@ -134,7 +134,7 @@
 	</bean>
 
 	<bean id="tokenStore"
-		class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore" />
+		class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore" />
 
 	<bean id="tokenServices"
 		class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
@@ -148,7 +148,7 @@
 		class="org.springframework.security.oauth.examples.keyhole.oauth.SparklrTokenEnhancer" />
 
 	<bean id="requestFactory"
-		class="org.springframework.security.oauth2.provider.DefaultOAuth2RequestFactory">
+		class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
 		<constructor-arg name="clientDetailsService" ref="clientDetails" />
 	</bean>
 
@@ -181,38 +181,6 @@
 		
 	<!-- client details definitions -->
 	<import resource="classpath:/spring/oauth2-clients.xml"/>
-	<!-- <oauth:client-details-service id="clientDetails">
-		<oauth:client client-id="my-trusted-client"
-			authorized-grant-types="password,authorization_code,refresh_token,implicit"
-			authorities="ROLE_CLIENT, ROLE_TRUSTED_CLIENT" scope="read,write,trust"
-			access-token-validity="60" />
-		<oauth:client client-id="my-trusted-client-with-secret"
-			authorized-grant-types="password,authorization_code,refresh_token,implicit"
-			secret="somesecret" authorities="ROLE_CLIENT, ROLE_TRUSTED_CLIENT" />
-		<oauth:client client-id="my-client-with-secret"
-			authorized-grant-types="client_credentials" authorities="ROLE_CLIENT"
-			scope="read" secret="secret" />
-		<oauth:client client-id="my-less-trusted-client"
-			authorized-grant-types="authorization_code,implicit" authorities="ROLE_CLIENT" />
-		<oauth:client client-id="my-less-trusted-autoapprove-client"
-			authorized-grant-types="implicit" authorities="ROLE_CLIENT" scope="read,write,trust"
-			autoapprove="true" />
-		<oauth:client client-id="my-client-with-registered-redirect"
-			authorized-grant-types="authorization_code,client_credentials"
-			authorities="ROLE_CLIENT" redirect-uri="http://anywhere?key=value"
-			scope="read,trust" />
-		<oauth:client client-id="my-untrusted-client-with-registered-redirect"
-			authorized-grant-types="authorization_code" authorities="ROLE_CLIENT"
-			redirect-uri="http://anywhere" scope="read" />
-		<oauth:client client-id="tonr" resource-ids="sparklr"
-			authorized-grant-types="authorization_code,implicit" authorities="ROLE_CLIENT"
-			scope="read,write" secret="secret" />
-		<oauth:client client-id="tonr-with-redirect"
-			resource-ids="sparklr" authorized-grant-types="authorization_code,implicit"
-			authorities="ROLE_CLIENT" scope="read,write" secret="secret"
-			redirect-uri="${tonr.redirect:http://localhost:8080/tonr2/sparklr/redirect}" />
-	</oauth:client-details-service>
- -->
 	<mvc:annotation-driven />
 
 	<mvc:default-servlet-handler />
@@ -247,15 +215,6 @@
 			<bean
 				class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
 				<property name="extractValueFromSingleKeyModel" value="true" />
-			</bean>
-		</property>
-	</bean>
-
-	<bean id="userController"
-		class="org.springframework.security.oauth.examples.keyhole.mvc.UserController">
-		<property name="jwtTokenServices">
-			<bean class="org.springframework.security.oauth2.sso.provider.token.JwtTokenConverter">
-				<property name="signingKey" value="${jwtSigningKey}" />
 			</bean>
 		</property>
 	</bean>

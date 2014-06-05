@@ -7,21 +7,34 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
 	<bean id="oauth2SingleSignOnFilter"
-		class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOnFilter">
-		<constructor-arg value="${loginFormUri}" />
-		<property name="authenticationManager" ref="oauth2SingleSignOnAuthenticationManager"/>
-		<property name="oauth2ClientContextConfig" value="OAUTH2_CLIENT_CONTEXT" />
-	</bean>	
+		class="org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter"
+		c:defaultFilterProcessesUrl="${loginFormUri}"		
+		p:tokenServices-ref="oauth2RemoteTokenServices"
+		p:restTemplate-ref="oauth2RestTemplate" />
+
+	<bean id="oauth2RemoteTokenServices" class="org.springframework.security.oauth2.provider.token.RemoteTokenServices"
+		p:clientId="sparklr" 
+		p:clientSecret="secret" 
+		p:checkTokenEndpointUrl="${checkToeknUri}"
+	/>
 	
+	<bean id="oauth2RestTemplate"
+		class="org.springframework.security.oauth2.client.OAuth2RestTemplate"
+		c:resource-ref="sso" scope="session">
+		<aop:scoped-proxy proxy-target-class="false"/>
+	</bean>
+
 	<bean id="oauth2SingleSignOutFilter"
 		class="org.springframework.security.web.authentication.logout.LogoutFilter">
 		<constructor-arg value="/index.jsp" />
@@ -39,20 +52,5 @@
 		<property name="filterProcessesUrl" value="${logoutUri}" />
 		
 	</bean>
-
-	<bean id="oauth2SingleSignOnAuthenticationProvider" class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOnAuhtencationProvider">
-		<property name="userInfoUri" value="${userInfoUri}" />
-		<property name="resource" ref="sso" />
-		<property name="clientTokenServices" ref="clientTokenServices" />
-		<property name="jwtTokenConverter" ref="oauth2SsoJwtTokenConverter" />
-	</bean>
-	
-	<bean id="oauth2SsoJwtTokenConverter" class="org.springframework.security.oauth2.sso.provider.token.JwtTokenConverter">
-		<property name="signingKey" value="${jwtSigningKey}" />
-	</bean>
-
-	<sec:authentication-manager id="oauth2SingleSignOnAuthenticationManager">
-		<sec:authentication-provider ref="oauth2SingleSignOnAuthenticationProvider"/>
-	</sec:authentication-manager>	
 
 </beans>

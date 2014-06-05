@@ -76,7 +76,7 @@
 	<authentication-manager alias="authenticationManager" xmlns="http://www.springframework.org/schema/security"/>
 
 	<bean id="tokenStore"
-		class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore" />
+		class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore" />
 
 	<bean id="tokenEnhancer"
 		class="org.springframework.security.oauth.examples.sparklr.oauth.SparklrTokenEnhancer" />
@@ -84,16 +84,10 @@
 	<!-- resource server definitions -->
 	<import resource="classpath:/spring/oauth2-resources.xml" />
 
-	<bean id="remoteTokenServices"
-		class="org.springframework.security.oauth2.sso.provider.token.RemoteResourceServerTokenServices">
-		<property name="tokenStore" ref="tokenStore" />
-		<property name="resource" ref="sparklr" />
-		<property name="userInfoUri" value="${userInfoUri}" />
-		<property name="jwtTokenServices">
-			<bean class="org.springframework.security.oauth2.sso.provider.token.JwtTokenConverter">
-				<property name="signingKey" value="${jwtSigningKey}" />
-			</bean>
-		</property>
+	<bean id="remoteTokenServices" class="org.springframework.security.oauth2.provider.token.RemoteTokenServices">
+		<property name="clientId" value="sparklr" />
+		<property name="clientSecret" value="secret" />
+		<property name="checkTokenEndpointUrl" value="${checkToeknUri}" />
 	</bean>
 
 	<oauth:resource-server id="resourceServerFilter" resource-id="sparklr" token-services-ref="remoteTokenServices" />

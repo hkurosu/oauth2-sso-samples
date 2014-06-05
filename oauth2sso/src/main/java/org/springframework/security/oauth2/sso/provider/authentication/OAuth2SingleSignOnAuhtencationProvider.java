@@ -8,11 +8,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.client.token.ClientTokenServices;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.JwtTokenServices;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOnFilter.OAuth2ClientContextAuthentication;
 import org.springframework.util.Assert;
 
@@ -22,36 +19,15 @@ import org.springframework.util.Assert;
  */
 public class OAuth2SingleSignOnAuhtencationProvider implements AuthenticationProvider, InitializingBean {
 
-	private String userInfoUri;
+	private ResourceServerTokenServices resourceServerTokenServices;
 
-	private JwtTokenServices jwtTokenConverter;
-
-	private OAuth2ProtectedResourceDetails resource;
-
-	private ClientTokenServices clientTokenServices;
-
-	public void setUserInfoUri(String userInfoUrl) {
-		this.userInfoUri = userInfoUrl;
-	}
-
-	public void setJwtTokenConverter(JwtTokenServices jwtTokenServices) {
-		this.jwtTokenConverter = jwtTokenServices;
-	}
-
-	public void setResource(OAuth2ProtectedResourceDetails resource) {
-		this.resource = resource;
-	}
-
-	public void setClientTokenServices(ClientTokenServices clientTokenServices) {
-		this.clientTokenServices = clientTokenServices;
+	public void setResourceServerTokenServices(ResourceServerTokenServices resourceServerTokenServices) {
+		this.resourceServerTokenServices = resourceServerTokenServices;
 	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(userInfoUri, "userInfoUri must be specified");
-		Assert.notNull(resource, "resource must be specified");
-		Assert.notNull(jwtTokenConverter, "jwtTokenConverter must be specified");
-		Assert.notNull(clientTokenServices, "clientTokenServices must be specieid");;
+		Assert.notNull(resourceServerTokenServices, "resourceServerTokenServices must be specieid");
 	}
 
 	@Override
@@ -60,18 +36,8 @@ public class OAuth2SingleSignOnAuhtencationProvider implements AuthenticationPro
 			return null;
 		}
 		OAuth2ClientContext clientContext = ((OAuth2ClientContextAuthentication) authentication).getClientContext();
-		OAuth2RestTemplate restClient = new OAuth2RestTemplate(resource, clientContext);
-		
-		// get authentication from authorization server
-		String jwtToken = restClient.getForObject(userInfoUri, String.class);
-		OAuth2Authentication oauth2Auth = jwtTokenConverter.loadAuthentication(jwtToken);
-
-		// save the token to the token store.
-		if (clientTokenServices != null) {
-			clientTokenServices.saveAccessToken(resource, oauth2Auth, restClient.getAccessToken());
-		}
-
-		return oauth2Auth;
+		OAuth2AccessToken accessToken = clientContext.getAccessToken();
+		return resourceServerTokenServices.loadAuthentication(accessToken.getValue());
 	}
 
 	@Override
