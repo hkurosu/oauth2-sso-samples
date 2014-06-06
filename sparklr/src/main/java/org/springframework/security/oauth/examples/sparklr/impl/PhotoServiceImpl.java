@@ -36,9 +36,14 @@ public class PhotoServiceImpl implements PhotoService {
 
 	public InputStream loadPhoto(String id) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = null;
 		if (authentication.getPrincipal() instanceof UserDetails) {
 			UserDetails details = (UserDetails) authentication.getPrincipal();
-			String username = details.getUsername();
+			username = details.getUsername();
+		} else if (authentication.getPrincipal() instanceof String) {
+			username = (String) authentication.getPrincipal();
+		}
+		if (username != null) {
 			for (PhotoInfo photoInfo : getPhotos()) {
 				if (id.equals(photoInfo.getId()) && username.equals(photoInfo.getUserId())) {
 					URL resourceURL = getClass().getResource(photoInfo.getResourceURL());
