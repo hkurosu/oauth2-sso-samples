@@ -5,12 +5,12 @@ Extended Spring OAuth2 tonr/sparklr samples to support Single sign on.
 
 # Getting Started
 
-## Preparation
-To run sample applications, you need to download the [spring-security-oauth](https://github.com/spring-projects/spring-security-oauth) project first and 
-build and install both spring-security-oauth2 and spring-security-jwt projects successfully into your local maven repository.
+## Spring framework dependencies
 
-Normally executing "mvn install" in the spring-security-oauth directory will do all necessary steps for you.
-	$ mvn install -p bootstrap
+spring-* : 3.2.8.RELEASE
+spring-security : 3.2.3.RELEASE
+spring-security-oauth2 : 2.0.1.RELEASE
+spring-security-jwt : 1.0.2.RELEASE
 	
 ## Build samples applications (command line)
 

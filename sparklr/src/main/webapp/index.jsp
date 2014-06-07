@@ -28,17 +28,8 @@
     <p>This is a great site to store and view your photos. Unfortunately, we don't have any services
     for printing your photos.  For that, you'll have to go to Tonr.</p>
 
-    <authz:authorize ifNotGranted="ROLE_USER">
-      <h2>Login</h2>
-      <form id="loginForm" name="loginForm" action="<c:url value="/login.do"/>" method="post">
-        <p><label>Username: <input type='text' name='j_username' value="marissa"></label></p>
-        <p><label>Password: <input type='text' name='j_password' value="koala"></label></p>
-        
-        <p><input name="login" value="Login" type="submit"></p>
-      </form>
-    </authz:authorize>
     <authz:authorize ifAllGranted="ROLE_USER">
-      <div style="text-align: center"><form action="<c:url value="/logout.do"/>"><input type="submit" value="Logout"></form></div>
+      <div style="text-align: center"><form action="<c:url value="/j_spring_security_logout"/>"><input type="submit" value="Logout"></form></div>
       
       <h2>Your Photos</h2>
 
