@@ -33,7 +33,7 @@
 
 	<bean id="oauth2LogoutSuccessHandler" class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2LogoutSuccessHandler"
 		p:logoutUri="${endSessionUri}"
-		p:defaultLogoutSuccessUri="index.jsp"
+		p:defaultLogoutSuccessUri="/index.jsp"
 	/>
 	
 </beans>

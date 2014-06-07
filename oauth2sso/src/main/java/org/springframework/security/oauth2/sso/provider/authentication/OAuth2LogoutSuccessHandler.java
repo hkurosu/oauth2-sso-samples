@@ -66,8 +66,10 @@ public class OAuth2LogoutSuccessHandler implements LogoutSuccessHandler, Initial
 		}
 		if (!UrlUtils.isAbsoluteUrl(targetUrl)) {
 			String[] temp = targetUrl.split("\\?");
+			String path = request.getContextPath();
+			path += targetUrl;
 			targetUrl = UrlUtils.buildFullRequestUrl(request.getScheme(), request.getServerName(),
-					request.getServerPort(), temp[0], temp.length > 1 ? temp[1] : null);
+					request.getServerPort(), path, temp.length > 1 ? temp[1] : null);
 		}
 
 		UriComponentsBuilder logoutUriBuilder = UriComponentsBuilder.fromUri(logoutUri);
