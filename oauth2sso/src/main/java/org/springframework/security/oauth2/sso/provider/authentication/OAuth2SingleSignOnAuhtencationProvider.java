@@ -15,7 +15,13 @@ import org.springframework.util.Assert;
 
 /**
  * @author hkurosu@gmail.com
- *
+ * @deprecated Custom implementation is no longer necessary. Use
+ * {@link org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
+ * OAuth2ClientAuthenticationProcessingFilter} and
+ * {@link org.springframework.security.oauth2.provider.token.RemoteTokenServices RemoteTokenServices}.
+ * @see org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
+ * OAuth2ClientAuthenticationProcessingFilter
+ * @see org.springframework.security.oauth2.provider.token.RemoteTokenServices RemoteTokenServices
  */
 public class OAuth2SingleSignOnAuhtencationProvider implements AuthenticationProvider, InitializingBean {
 

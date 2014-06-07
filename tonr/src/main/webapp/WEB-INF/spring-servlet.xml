@@ -22,11 +22,8 @@
 		<intercept-url pattern="/facebook/**" access="ROLE_USER" />
 		<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />	
  		<anonymous/>
-		<!-- *** replace with custom-filter ***
-		<logout logout-success-url="/index.jsp" logout-url="/logout.do" /> 
-		-->
- 		<custom-filter ref="oauth2SingleSignOutFilter" position="LOGOUT_FILTER" />
-		<custom-filter ref="oauth2ClientFilter"	 before="PRE_AUTH_FILTER" />
+ 		<sec:logout invalidate-session="true" success-handler-ref="oauth2LogoutSuccessHandler" />
+ 		<custom-filter ref="oauth2ClientFilter"	 before="PRE_AUTH_FILTER" />
 		<custom-filter ref="oauth2SingleSignOnFilter" position="FORM_LOGIN_FILTER" />
 	</http>
 

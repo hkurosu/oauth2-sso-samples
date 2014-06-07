@@ -26,10 +26,6 @@
 		<intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
 		<anonymous enabled="false" />
 		<http-basic entry-point-ref="clientAuthenticationEntryPoint" />
-		<!-- include this only if you need to authenticate clients via request 
-			parameters -->
-		<custom-filter ref="clientCredentialsTokenEndpointFilter"
-			after="BASIC_AUTH_FILTER" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
 	
@@ -42,8 +38,6 @@
 		<intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
 		<anonymous enabled="false" />
 		<http-basic entry-point-ref="clientAuthenticationEntryPoint" />
-		<custom-filter ref="clientCredentialsTokenEndpointFilter"
-			after="BASIC_AUTH_FILTER" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
 
@@ -89,13 +83,18 @@
 		disable-url-rewriting="true" xmlns="http://www.springframework.org/schema/security">
 		<intercept-url pattern="/oauth/**" access="ROLE_USER" />
 		<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-
 		<form-login authentication-failure-url="/login.jsp?authentication_error=true"
 			default-target-url="/index.jsp" login-page="/login.jsp"
 			login-processing-url="/login.do" />
-		<logout logout-success-url="/index.jsp" logout-url="/logout.do" />
+		<logout logout-url="/oauth/end_session"
+			success-handler-ref="globalLogoutSeccessHandler"
+			invalidate-session="true" />
 		<anonymous />
 	</http>
+	
+	<bean id="globalLogoutSeccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+		<property name="targetUrlParameter" value="redir" />
+	</bean>
 
 	<bean id="oauthAuthenticationEntryPoint"
 		class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">

@@ -85,7 +85,7 @@
 	<import resource="classpath:/spring/oauth2-resources.xml" />
 
 	<bean id="remoteTokenServices" class="org.springframework.security.oauth2.provider.token.RemoteTokenServices">
-		<property name="clientId" value="sparklr" />
+		<property name="clientId" value="tonr" />
 		<property name="clientSecret" value="secret" />
 		<property name="checkTokenEndpointUrl" value="${checkToeknUri}" />
 	</bean>

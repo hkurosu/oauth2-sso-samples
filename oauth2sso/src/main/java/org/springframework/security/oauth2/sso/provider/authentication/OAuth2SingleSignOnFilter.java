@@ -25,7 +25,11 @@ import org.springframework.util.Assert;
 
 /**
  * @author hirobumi.kurosu
- * 
+ * @deprecated Custom implementation is no longer necessary. Use
+ * {@link org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
+ * OAuth2ClientAuthenticationProcessingFilter} instead.
+ * @see org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
+ * OAuth2ClientAuthenticationProcessingFilter
  */
 public class OAuth2SingleSignOnFilter extends AbstractAuthenticationProcessingFilter {
 

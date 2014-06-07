@@ -24,29 +24,16 @@
 		p:restTemplate-ref="oauth2RestTemplate" />
 
 	<bean id="oauth2RemoteTokenServices" class="org.springframework.security.oauth2.provider.token.RemoteTokenServices"
-		p:clientId="tonr" 
+		p:clientId="tonr"
 		p:clientSecret="secret" 
 		p:checkTokenEndpointUrl="${checkToeknUri}"
 	/>
 
-	<oauth:rest-template id="oauth2RestTemplate" resource="sso" />
+	<oauth:rest-template id="oauth2RestTemplate" resource="sparklr" />
 
-	<bean id="oauth2SingleSignOutFilter"
-		class="org.springframework.security.web.authentication.logout.LogoutFilter">
-		<constructor-arg value="/index.jsp" />
-		<constructor-arg>
-			<util:list>
-				<bean class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2SingleSignOutHandler">
-					<property name="revokeTokenEndpointUri" value="${revokeTokenUri}" />
-					<property name="resource" ref="sso" />
-					<property name="clientTokenServices" ref="clientTokenServices" />
-					<property name="oauth2ClientContextConfig" value="OAUTH2_CLIENT_CONTEXT" />		
-				</bean>
-				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
-			</util:list>
-		</constructor-arg>
-		<property name="filterProcessesUrl" value="${logoutUri}" />
-		
-	</bean>
-
+	<bean id="oauth2LogoutSuccessHandler" class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2LogoutSuccessHandler"
+		p:logoutUri="${endSessionUri}"
+		p:defaultLogoutSuccessUri="index.jsp"
+	/>
+	
 </beans>
