@@ -7,10 +7,10 @@ Extended Spring OAuth2 tonr/sparklr samples to support Single sign on.
 
 ## Spring framework dependencies
 
-spring-* : 3.2.8.RELEASE
-spring-security : 3.2.3.RELEASE
-spring-security-oauth2 : 2.0.1.RELEASE
-spring-security-jwt : 1.0.2.RELEASE
+1. spring-* : 3.2.8.RELEASE
+1. spring-security : 3.2.3.RELEASE
+1. spring-security-oauth2 : 2.0.1.RELEASE
+1. spring-security-jwt : 1.0.2.RELEASE
 	
 ## Build samples applications (command line)
 
