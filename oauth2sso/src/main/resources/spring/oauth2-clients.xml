@@ -32,7 +32,11 @@
 		<oauth:client client-id="my-untrusted-client-with-registered-redirect"
 			authorized-grant-types="authorization_code" authorities="ROLE_CLIENT"
 			redirect-uri="http://anywhere" scope="read" />
-		<oauth:client client-id="tonr" resource-ids="sparklr"
+		<oauth:client client-id="tonr" resource-ids="tonr"
+			authorized-grant-types="authorization_code,implicit"
+			authorities="ROLE_CLIENT" scope="read,write" secret="secret"
+			autoapprove="true" />
+		<oauth:client client-id="sparklr" resource-ids="sparklr"
 			authorized-grant-types="authorization_code,implicit"
 			authorities="ROLE_CLIENT" scope="read,write" secret="secret"
 			autoapprove="true" />

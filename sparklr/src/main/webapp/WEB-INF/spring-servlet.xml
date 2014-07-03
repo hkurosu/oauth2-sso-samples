@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-	<context:property-placeholder location="classpath:/keyhole.properties" />
+	<context:property-placeholder location="classpath:/keyhole.properties,classpath:/sparklr.properties" />
 
 	<!-- The OAuth2 protected resources are separated out into their own block 
 		so we can deal with authorization and error handling separately. This isn't 
@@ -85,12 +85,12 @@
 	<import resource="classpath:/spring/oauth2-resources.xml" />
 
 	<bean id="remoteTokenServices" class="org.springframework.security.oauth2.provider.token.RemoteTokenServices">
-		<property name="clientId" value="tonr" />
-		<property name="clientSecret" value="secret" />
+		<property name="clientId" value="${clientId}" />
+		<property name="clientSecret" value="${clientSecret}" />
 		<property name="checkTokenEndpointUrl" value="${checkToeknUri}" />
 	</bean>
 
-	<oauth:resource-server id="resourceServerFilter" resource-id="sparklr" token-services-ref="remoteTokenServices" />
+	<oauth:resource-server id="resourceServerFilter" resource-id="${clientId}" token-services-ref="remoteTokenServices" />
 
 	<mvc:annotation-driven />
 

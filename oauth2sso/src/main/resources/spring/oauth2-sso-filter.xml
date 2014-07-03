@@ -24,12 +24,12 @@
 		p:restTemplate-ref="oauth2RestTemplate" />
 
 	<bean id="oauth2RemoteTokenServices" class="org.springframework.security.oauth2.provider.token.RemoteTokenServices"
-		p:clientId="tonr"
-		p:clientSecret="secret" 
+		p:clientId="${clientId}"
+		p:clientSecret="${clientSecret}" 
 		p:checkTokenEndpointUrl="${checkToeknUri}"
 	/>
 
-	<oauth:rest-template id="oauth2RestTemplate" resource="sparklr" />
+	<oauth:rest-template id="oauth2RestTemplate" resource="${clientId}" />
 
 	<bean id="oauth2LogoutSuccessHandler" class="org.springframework.security.oauth2.sso.provider.authentication.OAuth2LogoutSuccessHandler"
 		p:logoutUri="${endSessionUri}"
